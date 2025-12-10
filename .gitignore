@@ -5,19 +5,19 @@ __pycache__/
 
 # virtual environment
 venv/
-.env/
+.env
 env/
-.venv/
+.venv
 
 # pytest / coverage
-.pytest_cache/
-.cache/
+.pytest_cache
+.cache
 .coverage
 coverage.xml
 htmlcov/
 
 # Playwright caches / artifacts
-.playwright/
+.playwright
 ms-playwright/    # (선택) OS 캐시 위치와 유사한 이름
 playwright-report/ # (만약 자동 생성 리포트 폴더가 있으면)
 
@@ -32,8 +32,8 @@ tmp/
 Thumbs.db
 
 # Editor / IDE
-.vscode/
-.idea/
+.vscode
+.idea
 *.iml
 *.sublime-project
 *.sublime-workspace
@@ -41,7 +41,7 @@ Thumbs.db
 # Python packaging
 build/
 dist/
-*.egg-info/
+*.egg-info
 pip-wheel-metadata/
 
 # node (if present)

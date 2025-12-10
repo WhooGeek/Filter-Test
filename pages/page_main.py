@@ -5,8 +5,11 @@ class MainPage:
         self.page = page
         self.url = "https://www.fashiongo.net/"
 
+        # Locators
+        self.signin_btn = page.locator("a.header_signIn")
+
     def goto(self):
         self.page.goto(self.url)
 
     def click_login(self):
-        self.page.click("#login-btn")
+        self.signin_btn.click()
