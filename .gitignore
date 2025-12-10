@@ -1,0 +1,63 @@
+# --- Python / bytecode ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# virtual environment
+venv/
+.env/
+env/
+.venv/
+
+# pytest / coverage
+.pytest_cache/
+.cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Playwright caches / artifacts
+.playwright/
+ms-playwright/    # (선택) OS 캐시 위치와 유사한 이름
+playwright-report/ # (만약 자동 생성 리포트 폴더가 있으면)
+
+# logs / temp
+*.log
+*.tmp
+tmp/
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor / IDE
+.vscode/
+.idea/
+*.iml
+*.sublime-project
+*.sublime-workspace
+
+# Python packaging
+build/
+dist/
+*.egg-info/
+pip-wheel-metadata/
+
+# node (if present)
+node_modules/
+
+# test artifacts / reports (보통 CI 산출물)
+reports/
+reports-*/ 
+test-results/
+artifacts/
+
+# secrets / local config
+local_settings.py
+secrets.json
+credentials.json
+
+# misc
+*.sqlite3
+*.db
