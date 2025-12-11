@@ -20,7 +20,7 @@ class LoginPage:
         self.password.type(password, delay=50)
 
         # 버튼 비활성 예외 처리
-        for _ in range(20):
+        for _ in range(40):
             if self.submit_btn.is_enabled():
                 break
             time.sleep(0.5)
