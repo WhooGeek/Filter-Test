@@ -9,6 +9,7 @@ load_dotenv() # env 파일 로드
 
 EMAIL = os.getenv("LOGIN_EMAIL")
 PASSWORD = os.getenv("LOGIN_PASSWORD")
+IS_DOCKER = os.getenv("RUNNING_IN_DOCKER", "false") == "true"
 
 @pytest.fixture(scope="session")
 def credentials():
@@ -24,7 +25,7 @@ def playwright_instance():
 
 @pytest.fixture(scope="session")
 def browser(playwright_instance):
-    browser = playwright_instance.chromium.launch(headless=False)
+    browser = playwright_instance.chromium.launch(headless=IS_DOCKER)
     yield browser
     browser.close()
 
