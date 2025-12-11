@@ -9,3 +9,6 @@ services:
     volumes:
       - .:/app
     command: ["pytest", "-s", "-q"]
+    environment:
+      - LOGIN_EMAIL=${FG_ID}
+      - LOGIN_PASSWORD=${FG_PW}
