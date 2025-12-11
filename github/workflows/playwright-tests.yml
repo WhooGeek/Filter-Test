@@ -1,0 +1,25 @@
+name: Playwright Tests
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4 # github 가상 서버에 코드 로드
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3 # Docker Buildx 설정
+
+      - name: Build services
+        run: docker compose build # Docker Compose를 사용하여 서비스 빌드
+
+      - name: Run tests
+        run: docker compose up --abort-on-container-exit # 테스트 실행 및 컨테이너 종료 시 중단
+
+        
