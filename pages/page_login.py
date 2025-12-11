@@ -11,13 +11,23 @@ class LoginPage:
         self.user_avatar = page.locator("a.user-avatar")  # 로그인 후 뜨는 요소
 
     def login(self, username: str, password: str):
+
+        try:
+            cookie_button = self.page.locator('#onetrust-accept-btn-handler')
+            if cookie_button.is_visible():
+                cookie_button.click()
+        except:
+            pass
+        
+        self.page.wait_for_timeout(500)
+
         self.email.click()
-        self.email.fill("")  # 입력 필드 초기화
-        self.email.type(username, delay=50)  
+        self.email.type(username, delay=50)
+        self.page.wait_for_timeout(200)
 
         self.password.click()
-        self.password.fill("")
         self.password.type(password, delay=50)
+        self.page.wait_for_timeout(200)
 
         # 버튼 비활성 예외 처리
         for _ in range(40):
@@ -29,5 +39,5 @@ class LoginPage:
 
         self.submit_btn.click()
 
-        expect(self.user_avatar).to_be_visible(timeout=5000)   #로그인 성공 대기
-
+        # 로그인 성공 여부 확인
+        expect(self.user_avatar).to_be_visible(timeout=5000)

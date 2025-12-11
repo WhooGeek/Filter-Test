@@ -25,7 +25,10 @@ def playwright_instance():
 
 @pytest.fixture(scope="session")
 def browser(playwright_instance):
-    browser = playwright_instance.chromium.launch(headless=IS_DOCKER)
+    browser = playwright_instance.chromium.launch(
+        headless=IS_DOCKER,
+        args=["--disable-blink-features=AutomationControlled", "--disable-gpu"]
+        )
     yield browser
     browser.close()
 
