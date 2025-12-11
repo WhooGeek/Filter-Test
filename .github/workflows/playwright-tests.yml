@@ -10,8 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      FG_ID: ${{ secrets.FG_ID }}
-      FG_PW: ${{ secrets.FG_PW }}
+      FG_ID: ${{ secrets.LOGIN_EMAIL }}
+      FG_PW: ${{ secrets.LOGIN_PASSWORD }}
 
     steps:
       - name: Checkout code
