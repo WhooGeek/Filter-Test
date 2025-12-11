@@ -9,6 +9,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    env:
+      FG_ID: ${{ secrets.FG_ID }}
+      FG_PW: ${{ secrets.FG_PW }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4 # github 가상 서버에 코드 로드
@@ -21,5 +25,6 @@ jobs:
 
       - name: Run tests
         run: docker compose up --abort-on-container-exit # 테스트 실행 및 컨테이너 종료 시 중단
+
 
         
