@@ -12,7 +12,7 @@ class LoginPage:
 
     def login(self, username: str, password: str):
         self.page.wait_for_load_state("domcontentloaded")
-        self.page.wait_for_load_state("networkidel") # 네트워크 안정화 대기
+        self.page.wait_for_load_state("networkidle") # 네트워크 안정화 대기
 
         # 이메일 입력
         self.email.click()
