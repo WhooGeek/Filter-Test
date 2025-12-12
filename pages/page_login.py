@@ -12,29 +12,29 @@ class LoginPage:
 
     def login(self, username: str, password: str):
         self.page.wait_for_load_state("domcontentloaded")
+        self.page.wait_for_load_state("networkidel") # 네트워크 안정화 대기
 
         # 이메일 입력
         self.email.click()
-        self.page.keyboard.type(username, delay=80)  # 실제 키보드 입력 느낌
-        self.page.wait_for_timeout(200)
-        self.email.blur()
-        self.page.wait_for_timeout(200)
+        self.email.focus() # focus 명시적 호출
+        self.page.keyboard.type(username, delay=80)
+
+        self.email.evaluate("el => el.dispatchEvent(new Event('input', { bubbles: true}))")
+        self.email.evaluate("el => el.dispatchEvent(new Event('change', { bubbles: true}))")
+        self.page.wait_for_timeout(300)
 
         # 비밀번호 입력
         self.password.click()
+        self.password.focus()
         self.page.keyboard.type(password, delay=80)
-        self.page.wait_for_timeout(200)
-        self.password.blur()
-        self.page.wait_for_timeout(200)
+
+        self.email.evaluate("el => el.dispatchEvent(new Event('input', { bubbles : true }))")
+        self.email.evaluate("el => el.dispatchEvent(new Event('change', { bubbles : true }))")
+        self.page.wait_for_timeout(300)
+        
 
         # 버튼 활성화 대기
-        for _ in range(40):
-            if self.submit_btn.is_enabled():
-                break
-            self.page.wait_for_timeout(300)
-        else:
-            raise Exception("로그인 버튼이 활성화되지 않았습니다.")
-
+        self.submit_btn.wait_for(state="enabled", timeout=10000)
         self.submit_btn.click()
 
         # 로그인 성공 요소 확인
