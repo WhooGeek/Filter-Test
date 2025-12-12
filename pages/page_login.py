@@ -1,5 +1,5 @@
-# pages/page_login.py
-from playwright.sync_api import Page, expect
+# pages/page_login.py (수정 제안)
+from playwright.sync_api import Page, expect, TimeoutError
 
 class LoginPage:
     def __init__(self, page: Page):
@@ -10,48 +10,40 @@ class LoginPage:
         self.user_avatar = page.locator("a.user-avatar")
 
     def login(self, username: str, password: str):
-        # 페이지 완전 로드 대기
         self.page.wait_for_load_state("domcontentloaded")
-        self.page.wait_for_load_state("networkidle")  # 네트워크까지 완전 대기
-        self.page.wait_for_timeout(1500)  # 추가 여유
-        
-        # 입력 필드가 실제로 보일 때까지 대기
-        self.email.wait_for(state="visible", timeout=5000)
-        self.password.wait_for(state="visible", timeout=5000)
+        self.page.wait_for_load_state("networkidle")
+        self.page.wait_for_timeout(500)  # 짧게 여유
 
-        # 이메일 입력
-        self.email.click()
-        self.email.type(username, delay=50)
-        self.page.wait_for_timeout(500)
+        # 보일 때까지 기다리기
+        expect(self.email).to_be_visible(timeout=5000)
+        expect(self.password).to_be_visible(timeout=5000)
 
-        # 비밀번호 입력
-        self.password.click()
-        self.password.type(password, delay=50)
-        self.page.wait_for_timeout(500)
+        # 더 안정적 입력 (fill은 기존값을 덮음)
+        self.email.fill(username, timeout=5000)
+        self.password.fill(password, timeout=5000)
 
-        # 버튼 활성화 폴링 (더 긴 timeout)
-        max_attempts = 50
-        for i in range(max_attempts):
-            if not self.submit_btn.is_disabled():
-                print(f"✅ 버튼 활성화됨 (시도 {i+1}/{max_attempts})")
-                break
-            self.page.wait_for_timeout(300)
-        else:
-            # 디버깅용 스크린샷
+        # 포커스 아웃/Tab으로 클라이언트 검증 트리거
+        try:
+            self.password.press("Tab")
+        except Exception:
+            # 가끔 press가 실패하면 페이지 레벨로 Tab
+            self.page.keyboard.press("Tab")
+
+        # 버튼이 활성화될 때까지 대기 (최대 20초)
+        try:
+            expect(self.submit_btn).to_be_enabled(timeout=20000)
+        except TimeoutError:
+            # 디버깅 정보 수집
             self.page.screenshot(path="button_not_enabled.png")
-            
-            # 버튼 상태 확인
-            is_disabled = self.submit_btn.get_attribute("disabled")
-            print(f"❌ 버튼 disabled 속성: {is_disabled}")
-            
+            print("Email value:", self.email.input_value())
+            # password는 보안상 출력하지 않는 것을 권장. 대신 길이만 출력:
+            pwd_val = self.password.input_value()
+            print("Password length:", len(pwd_val) if pwd_val is not None else "None")
+            print("Submit disabled attribute:", self.submit_btn.get_attribute("disabled"))
             raise TimeoutError("로그인 버튼이 활성화되지 않았습니다.")
 
-        # 로그인 버튼 클릭
+        # 클릭 및 네비게이션
         with self.page.expect_navigation(wait_until="domcontentloaded", timeout=60000):
             self.submit_btn.click()
 
-        self.page.wait_for_timeout(1000)
-        
-        # 로그인 성공 확인
         expect(self.user_avatar).to_be_visible(timeout=5000)
-        print("✅ 로그인 성공")
