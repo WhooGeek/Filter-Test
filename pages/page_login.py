@@ -28,8 +28,8 @@ class LoginPage:
         self.password.focus()
         self.page.keyboard.type(password, delay=80)
 
-        self.email.evaluate("el => el.dispatchEvent(new Event('input', { bubbles : true }))")
-        self.email.evaluate("el => el.dispatchEvent(new Event('change', { bubbles : true }))")
+        self.password.evaluate("el => el.dispatchEvent(new Event('input', { bubbles : true }))")
+        self.password.evaluate("el => el.dispatchEvent(new Event('change', { bubbles : true }))")
         self.page.wait_for_timeout(300)
         
 
