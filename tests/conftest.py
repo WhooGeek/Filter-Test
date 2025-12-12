@@ -7,8 +7,8 @@ import os
 
 load_dotenv() # env 파일 로드
 
-EMAIL = os.getenv("LOGIN_EMAIL")
-PASSWORD = os.getenv("LOGIN_PASSWORD")
+EMAIL = os.getenv("FG_ID")
+PASSWORD = os.getenv("FG_PW")
 IS_DOCKER = os.getenv("RUNNING_IN_DOCKER", "false") == "true"
 
 @pytest.fixture(scope="session")
