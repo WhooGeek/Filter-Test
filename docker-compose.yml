@@ -8,5 +8,5 @@ services:
       - .:/app
     command: ["pytest", "-s", "-q"]
     environment:
-      - LOGIN_EMAIL=${FG_ID}
-      - LOGIN_PASSWORD=${FG_PW}
+      - FG_ID=${FG_ID}
+      - FG_PW=${FG_PW}
