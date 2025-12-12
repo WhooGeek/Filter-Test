@@ -7,8 +7,8 @@ import os
 
 load_dotenv() # env 파일 로드
 
-EMAIL = os.getenv("LOGIN_EMAIL")
-PASSWORD = os.getenv("LOGIN_PASSWORD")
+EMAIL = os.getenv("FG_ID")
+PASSWORD = os.getenv("FG_PW")
 IS_DOCKER = os.getenv("RUNNING_IN_DOCKER", "false") == "true"
 
 @pytest.fixture(scope="session")
@@ -25,7 +25,18 @@ def playwright_instance():
 
 @pytest.fixture(scope="session")
 def browser(playwright_instance):
-    browser = playwright_instance.chromium.launch(headless=IS_DOCKER)
+    browser = playwright_instance.chromium.launch(
+        headless=IS_DOCKER,
+        args=["--disable-blink-features=AutomationControlled", "--disable-gpu",
+              '--disable-dev-shm-usage',      # ✅ /dev/shm 사용 안 함
+                '--no-sandbox',                  # ✅ sandbox 비활성화
+                '--disable-setuid-sandbox',      # ✅ setuid sandbox 비활성화
+                '--disable-gpu',                 # ✅ GPU 비활성화
+                '--disable-web-security',        # ✅ CORS 등 보안 정책 완화
+                '--disable-features=IsolateOrigins,site-per-process',  # ✅ 프로세스 격리 비활성화
+        ]
+                
+        )
     yield browser
     browser.close()
 

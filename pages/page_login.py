@@ -11,23 +11,31 @@ class LoginPage:
         self.user_avatar = page.locator("a.user-avatar")  # 로그인 후 뜨는 요소
 
     def login(self, username: str, password: str):
+        self.page.wait_for_load_state("domcontentloaded")
+        self.page.wait_for_load_state("networkidle") # 네트워크 안정화 대기
+
+        # 이메일 입력
         self.email.click()
-        self.email.fill("")  # 입력 필드 초기화
-        self.email.type(username, delay=50)  
+        self.email.focus() # focus 명시적 호출
+        self.page.keyboard.type(username, delay=80)
 
+        self.email.evaluate("el => el.dispatchEvent(new Event('input', { bubbles: true}))")
+        self.email.evaluate("el => el.dispatchEvent(new Event('change', { bubbles: true}))")
+        self.page.wait_for_timeout(300)
+
+        # 비밀번호 입력
         self.password.click()
-        self.password.fill("")
-        self.password.type(password, delay=50)
+        self.password.focus()
+        self.page.keyboard.type(password, delay=80)
 
-        # 버튼 비활성 예외 처리
-        for _ in range(20):
-            if self.submit_btn.is_enabled():
-                break
-            time.sleep(0.5)
-        else:
-            raise Exception("로그인 버튼이 활성화되지 않았습니다.")
+        self.password.evaluate("el => el.dispatchEvent(new Event('input', { bubbles : true }))")
+        self.password.evaluate("el => el.dispatchEvent(new Event('change', { bubbles : true }))")
+        self.page.wait_for_timeout(300)
+        
 
+        # 버튼 활성화 대기
+        expect(self.submit_btn).to_be_enabled(timeout=10000)
         self.submit_btn.click()
 
-        expect(self.user_avatar).to_be_visible(timeout=5000)   #로그인 성공 대기
-
+        # 로그인 성공 요소 확인
+        expect(self.user_avatar).to_be_visible(timeout=5000)
