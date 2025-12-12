@@ -27,7 +27,15 @@ def playwright_instance():
 def browser(playwright_instance):
     browser = playwright_instance.chromium.launch(
         headless=IS_DOCKER,
-        args=["--disable-blink-features=AutomationControlled", "--disable-gpu"]
+        args=["--disable-blink-features=AutomationControlled", "--disable-gpu",
+              '--disable-dev-shm-usage',      # ✅ /dev/shm 사용 안 함
+                '--no-sandbox',                  # ✅ sandbox 비활성화
+                '--disable-setuid-sandbox',      # ✅ setuid sandbox 비활성화
+                '--disable-gpu',                 # ✅ GPU 비활성화
+                '--disable-web-security',        # ✅ CORS 등 보안 정책 완화
+                '--disable-features=IsolateOrigins,site-per-process',  # ✅ 프로세스 격리 비활성화
+        ]
+                
         )
     yield browser
     browser.close()

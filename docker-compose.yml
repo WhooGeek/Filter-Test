@@ -4,8 +4,10 @@ services:
     image: mytest:latest
     container_name: playwright-tests
     working_dir: /app
+    shm_size: '2gb'
     volumes:
       - .:/app
+      - /dev/shm:/dev/shm # 호스트의 shm 사용
     command: ["pytest", "-s", "-q"]
     environment:
       - FG_ID=${FG_ID}
