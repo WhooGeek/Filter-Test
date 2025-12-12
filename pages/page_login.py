@@ -34,7 +34,7 @@ class LoginPage:
         
 
         # 버튼 활성화 대기
-        self.submit_btn.wait_for(state="enabled", timeout=10000)
+        expect(self.submit_btn).to_be_enabled(timeout=10000)
         self.submit_btn.click()
 
         # 로그인 성공 요소 확인
