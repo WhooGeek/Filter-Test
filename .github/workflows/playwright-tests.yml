@@ -11,7 +11,7 @@ jobs:
 
     env:
       FG_ID: ${{ secrets.FG_ID }}
-      FG_PW: ${{ secrets.FG_PW }}
+      FG_PW: ${{ secrets.FG_PW }} 
 
     steps:
       - name: Checkout code
