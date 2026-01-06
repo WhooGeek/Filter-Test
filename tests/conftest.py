@@ -36,7 +36,18 @@ def playwright_instance():
 @pytest.fixture(scope="session")
 def browser(playwright_instance):
     print(f"\n[Browser Setup] Headless Mode: {HEADLESS_MODE}")
+    # --- 디버깅용 로그 추가 ---
+    print("\n" + "="*30)
+    print(f"Checking Env Vars in CI:")
     
+    id_val = os.getenv("FG_ID")
+    pw_val = os.getenv("FG_PW")
+
+    # 값이 있는지 없는지 O/X로 출력 (보안상 실제 값 출력 X)
+    print(f" -> FG_ID Exists? : {'YES' if id_val else 'NO (Empty!)'}")
+    print(f" -> FG_PW Exists? : {'YES' if pw_val else 'NO (Empty!)'}")
+    print("="*30 + "\n")
+    # -----------------------
     browser = playwright_instance.chromium.launch(
         headless=HEADLESS_MODE,  # ✅ 환경에 따라 True/False 자동 적용
         args=[
