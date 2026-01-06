@@ -32,7 +32,14 @@ class LoginPage:
         # 버튼 활성화 'Assertions' (Retry 로직 내장)
         # enabled 될 때까지 Playwright가 계속 찔러봅니다.
         expect(self.submit_btn).to_be_enabled(timeout=30000) # CI 고려 15초로 넉넉하게
-        self.submit_btn.click()
+
+        print("로그인 버튼 클릭 시도...")
+        try:
+            with self.page.expect_navigation(timeout=30000):
+                self.submit_btn.click(force=True)
+        except Exception as e:
+            print(f"페이지 이동 감지 실패: {e}")
 
         # 로그인 성공 확인
+        print("로그인 성공 여부 확인 중...")
         expect(self.user_avatar).to_be_visible(timeout=30000)

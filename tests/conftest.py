@@ -65,9 +65,8 @@ def browser(playwright_instance):
 
 @pytest.fixture(scope="function")
 def page(browser):
-    # 브라우저 컨텍스트 생성 (뷰포트 크기 등을 여기서 설정 가능)
     context = browser.new_context(
-        viewport={"width": 1920, "height": 1080} # CI 환경에서 화면 크기 고정 (권장)
+        viewport={"width": 1920, "height": 1080} # CI 환경에서 화면 크기 고정
     )
     page = context.new_page()
     yield page
