@@ -32,13 +32,13 @@ jobs:
       env:
         FG_ID: ${{ secrets.FG_ID }}
         FG_PW: ${{ secrets.FG_PW }}
-      run: pytest --reporter=html --tracing=retain-on-failure --video=retain-on-failure --screenshot=only-on-failure
+      run: pytest --tracing=retain-on-failure --video=retain-on-failure --screenshot=only-on-failure
 
     # 실패 시 원인 분석을 위한 레코드
-    - name: Upload Playwright Report
-      if: failure() # 테스트가 실패했을 때만 실행
+    - name: Upload Test Results
+      if: failure() 
       uses: actions/upload-artifact@v4
       with:
-        name: playwright-report
-        path: playwright-report/ 
+        name: test-results
+        path: test-results/ 
         retention-days: 30
