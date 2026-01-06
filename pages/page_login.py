@@ -8,26 +8,38 @@ class LoginPage:
         self.email = page.locator("#email-inp")
         self.password = page.locator("#pwd_inp")
         self.submit_btn = page.locator("button#btn-signin")
-        self.user_avatar = page.locator("a.user-avatar")  # 로그인 후 뜨는 요소
+        self.user_avatar = page.locator("a.user-avatar")
 
-    def login(self, username: str, password: str):
-        self.email.click()
-        self.email.fill("")  # 입력 필드 초기화
-        self.email.type(username, delay=50)  
+    def login(self, username: str, password: str):        
+        self.page.wait_for_load_state("domcontentloaded") # 입력창 준비 완료 확인
+        
+        # 이메일 입력
+        # locator.press_sequentially 사용 (요소에 직접 입력)
+        # delay를 100ms로 늘려 CI의 낮은 CPU 성능을 고려
+        self.email.click() # 클릭 유지
+        self.email.press_sequentially(username, delay=200)
+        
+        # 'Tab' 키로 자연스러운 Blur 유도
+        self.email.press("Tab") 
+        self.page.wait_for_timeout(500)
 
+        # 비밀번호 입력
         self.password.click()
-        self.password.fill("")
-        self.password.type(password, delay=50)
+        self.password.press_sequentially(password, delay=200)
+        self.password.press("Tab") # 탭 눌러서 포커스 해제
+        self.page.wait_for_timeout(1000)
+        
+        # 버튼 활성화 'Assertions' (Retry 로직 내장)
+        # enabled 될 때까지 Playwright가 계속 찔러봅니다.
+        expect(self.submit_btn).to_be_enabled(timeout=30000) # CI 고려 15초로 넉넉하게
 
-        # 버튼 비활성 예외 처리
-        for _ in range(20):
-            if self.submit_btn.is_enabled():
-                break
-            time.sleep(0.5)
-        else:
-            raise Exception("로그인 버튼이 활성화되지 않았습니다.")
+        print("로그인 버튼 클릭 시도...")
+        try:
+            with self.page.expect_navigation(timeout=30000):
+                self.submit_btn.click(force=True)
+        except Exception as e:
+            print(f"페이지 이동 감지 실패: {e}")
 
-        self.submit_btn.click()
-
-        expect(self.user_avatar).to_be_visible(timeout=5000)   #로그인 성공 대기
-
+        # 로그인 성공 확인
+        print("로그인 성공 여부 확인 중...")
+        expect(self.user_avatar).to_be_visible(timeout=30000)
