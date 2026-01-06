@@ -32,7 +32,7 @@ jobs:
       env:
         FG_ID: ${{ secrets.FG_ID }}
         FG_PW: ${{ secrets.FG_PW }}
-      run: pytest --returns 2 --tracing=retain-on-failure --video=retain-on-failure --screenshot=only-on-failure
+      run: pytest --reruns 2 --tracing=retain-on-failure --video=retain-on-failure --screenshot=only-on-failure
 
     # 실패 시 원인 분석을 위한 레코드
     - name: Upload Test Results
