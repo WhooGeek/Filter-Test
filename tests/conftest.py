@@ -14,7 +14,7 @@ EMAIL = os.getenv("FG_ID")
 PASSWORD = os.getenv("FG_PW")
 
 # 2. 실행 모드 감지 로직 (핵심 수정 부분)
-# GitHub Actions는 자동으로 'CI=true'를 설정해줍니다.
+# GitHub Actions는 자동으로 'CI=true'를 설정
 IS_CI = os.getenv("CI", "false") == "true"
 IS_DOCKER = os.getenv("RUNNING_IN_DOCKER", "false") == "true"
 
